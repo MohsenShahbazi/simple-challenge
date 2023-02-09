@@ -1,0 +1,74 @@
+<div class="card-container">
+  <div class="grid-toolbars" *ngIf="plnFirstPage">
+    <button mat-raised-button color="primary" (click)="openPanel()">New {{title}} Data</button>
+  </div>
+
+  <div class="grid-toolbars" *ngIf="pblBackFormViewer">
+    <button mat-raised-button color="warn" (click)="back()">Back {{title}}</button>
+  </div>
+
+</div>
+<br>
+
+<div class="row" id="plnDataElements" *ngIf="plnFirstPage" class="panel">
+
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{title}} Data
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <table mat-table matSort class="mat-elevation-z8" style="width: 100%;" [dataSource]="formListDate">
+
+      <ng-container *ngFor="let columnName of displayedColumns" matColumnDef="{{columnName}}">
+        <th mat-header-cell *matHeaderCellDef> {{columnName}} </th>
+        <td mat-cell *matCellDef="let formField">
+
+          <div *ngIf="columnName != 'Actions'">
+            {{formField[columnName]}}
+          </div>
+
+          <div *ngIf="columnName == 'Actions'">
+            <button mat-icon-button color="warn" (click)="delete(formField)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button (click)="edit(formField)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </td>
+
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+  </mat-expansion-panel>
+
+</div>
+
+<div class="row" id="pnlCreateEditForm" *ngIf="plnCreateEditFormViewer" class="panel">
+
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{title}} Create - Edit
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <form (ngSubmit)="save()" [formGroup]="form">
+
+
+      <div *ngFor="let element of elementList" class="form-group">
+        <app-element-generator [input]="element" [form]="form"></app-element-generator>
+      </div>
+
+      <br>
+      <div class="form-group">
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Submit {{title}}</button>
+      </div>
+    </form>
+
+
+  </mat-expansion-panel>
+</div>
